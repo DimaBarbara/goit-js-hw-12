@@ -17,20 +17,28 @@ let perPage = 15;
 btn.addEventListener("click", async (e) => {
     e.preventDefault();
     btn.disabled = true;
+    let posts
     try {
         fetchBtn.style.display = "none"
         gallery.innerHTML = "";
         page = 1;
-        const posts = await fetchPosts();
+        posts = await fetchPosts();
         
     } catch (error) {
         console.log(error);
     }
     finally {
+        if (posts) {
+            const maxPage = Math.ceil(posts.totalHits / perPage);
+            if (page >= maxPage) {
+                fetchBtn.style.display = "none";
+            } else {
+                fetchBtn.style.display = "block";
+            }
+        }
         btn.disabled = false;
     }
-    
-    
+
     });
 fetchBtn.addEventListener("click", async (e) => {
     e.preventDefault();
@@ -47,7 +55,6 @@ fetchBtn.addEventListener("click", async (e) => {
                 
         
             });
-            
             fetchBtn.style.display = "none"
             return
         }
